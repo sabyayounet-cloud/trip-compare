@@ -1,0 +1,219 @@
+.search-form {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.search-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--green));
+  opacity: 0.9;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.search-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  min-width: 140px;
+}
+
+.search-form label span {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.search-form input,
+.search-form select {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  font-size: 1rem;
+  min-height: 46px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-form input:focus,
+.search-form select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Airport autocomplete */
+.autocomplete-wrap {
+  position: relative;
+}
+.autocomplete-input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  min-height: 46px;
+}
+.autocomplete-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.autocomplete-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin: 0.25rem 0 0 0;
+  padding: 0.35rem 0;
+  list-style: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 220px;
+  overflow-y: auto;
+  z-index: 100;
+  box-shadow: var(--shadow-lg);
+}
+.autocomplete-item {
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: background 0.1s;
+}
+.autocomplete-item:hover {
+  background: var(--accent-soft);
+}
+.autocomplete-item.muted {
+  color: var(--text-muted);
+  cursor: default;
+}
+.ac-code {
+  font-weight: 700;
+  min-width: 2.5rem;
+  color: var(--accent);
+}
+.ac-name {
+  color: var(--text);
+  font-size: 0.95rem;
+}
+.max-stops-select {
+  min-width: 120px;
+}
+
+.submit-btn {
+  margin-top: 0.75rem;
+  padding: 0.9rem 2.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #0284c7);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+  min-width: 200px;
+  align-self: flex-start;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .search-form {
+    padding: 1.25rem;
+  }
+  .submit-btn {
+    width: 100%;
+  }
+}
+
+/* Advanced filters (flights) */
+.advanced-filters {
+  margin: 1rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.advanced-toggle {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  background: var(--bg-input);
+  border: none;
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.advanced-toggle:hover {
+  background: var(--accent-soft);
+}
+
+.advanced-fields {
+  padding: 1rem 1rem 1.5rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+}
+
+.advanced-fields .form-row {
+  margin-bottom: 0.75rem;
+}
+
+.advanced-fields .form-row:last-child {
+  margin-bottom: 0;
+}
+
+.search-form .checkbox-label {
+  flex-direction: row;
+  align-items: center;
+}
+
+.search-form .checkbox-label input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.explore-anywhere {
+  align-self: flex-end;
+}
+
+.search-form input.autocomplete-input:disabled {
+  background: var(--bg-input);
+  opacity: 0.9;
+  cursor: not-allowed;
+}

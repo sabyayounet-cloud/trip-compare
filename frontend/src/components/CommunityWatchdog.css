@@ -1,0 +1,216 @@
+.community-watchdog {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  margin-top: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.community-watchdog .section-header {
+  padding: 1.5rem 1.5rem 0.75rem;
+  position: relative;
+}
+
+.community-watchdog .section-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--accent));
+  opacity: 0.9;
+}
+
+.community-watchdog h2 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.community-watchdog .section-desc,
+.community-watchdog .filter-row {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.community-watchdog .tips-list,
+.community-watchdog .submit-tip {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.section-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+}
+
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.filter-row label { font-size: 0.9rem; color: var(--text-muted); }
+.filter-row input {
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  width: 100px;
+}
+
+.tips-list {
+  list-style: none;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+}
+
+.tips-list li {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  transition: background 0.15s;
+}
+
+.tips-list li:hover {
+  background: var(--bg-input);
+}
+
+.tips-list li.empty { color: var(--text-muted); }
+.tip-location { font-weight: 700; min-width: 2.5rem; }
+.tip-text { flex: 1; }
+.tip-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+.submit-tip {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+}
+
+.submit-tip h3 { font-size: 1.1rem; margin: 0 0 0.75rem 0; }
+.submit-tip textarea,
+.submit-tip input {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  font-family: inherit;
+}
+.submit-tip button {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #0284c7);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+  transition: transform 0.15s;
+}
+
+.submit-tip button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.submit-tip button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+/* Complaint & Resolution Tracker */
+.complaints-section {
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 1.5rem 2rem;
+  margin-top: 1rem;
+}
+
+.complaints-section h3 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.complaints-section .section-desc {
+  margin-bottom: 1rem;
+}
+
+.complaints-list {
+  list-style: none;
+  margin: 0 0 1.5rem 0;
+  padding: 0;
+}
+
+.complaints-list li {
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+  transition: background 0.15s;
+}
+
+.complaints-list li:hover {
+  background: var(--bg-input);
+}
+
+.complaints-list li.empty { color: var(--text-muted); }
+
+.complaint-item {
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.complaint-provider { font-weight: 700; color: var(--accent); }
+.complaint-type { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); }
+.complaint-desc { color: var(--text); }
+.complaint-meta { font-size: 0.85rem; color: var(--text-muted); }
+
+.submit-complaint {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-complaint h4 { font-size: 1rem; margin: 0 0 0.75rem 0; }
+
+.submit-complaint input,
+.submit-complaint select,
+.submit-complaint textarea {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.submit-complaint button {
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(220, 38, 38, 0.3);
+  transition: transform 0.15s;
+}
+
+.submit-complaint button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.submit-complaint button:disabled { opacity: 0.7; cursor: not-allowed; }

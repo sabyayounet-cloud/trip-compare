@@ -1,0 +1,43 @@
+# Render.com deployment configuration
+# Deploy for FREE at https://render.com
+
+services:
+  # FastAPI Backend
+  - type: web
+    name: tripcompare-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DEBUG
+        value: false
+      - key: DATABASE_URL
+        value: sqlite:///./tripcompare.db
+      - key: TRAVELPAYOUTS_TOKEN
+        sync: false
+      - key: TRAVELPAYOUTS_MARKER
+        sync: false
+      - key: BOOKING_AFFILIATE_ID
+        sync: false
+      - key: GETYOURGUIDE_PARTNER_ID
+        sync: false
+    healthCheckPath: /health
+    plan: free
+
+  # React Frontend (Static Site)
+  - type: web
+    name: tripcompare-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: tripcompare-api
+          property: host
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    plan: free

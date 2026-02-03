@@ -1,0 +1,349 @@
+.search-results {
+  margin-top: 2rem;
+}
+
+.search-results h2 {
+  font-size: 1.6rem;
+  margin: 0 0 0.75rem 0;
+  color: var(--text);
+}
+
+.results-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.live-badge {
+  display: inline-block;
+  background: var(--green-dim);
+  color: var(--green);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+.freshness {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.refresh-verify-btn {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.refresh-verify-btn:hover:not(:disabled) {
+  background: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.refresh-verify-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.results-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+}
+
+.results-message {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--green-dim);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--green);
+}
+
+.sources-hint {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem 0;
+}
+
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Result card with photo strip */
+.result-card {
+  display: flex;
+  align-items: stretch;
+  min-height: 140px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.result-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.card-photo {
+  width: 150px;
+  min-width: 150px;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.card-body {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  width: 100%;
+  margin-bottom: 0.35rem;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.badge.value-score { background: var(--accent-soft); color: var(--accent); }
+.badge.verified-gem { background: var(--green-dim); color: var(--green); }
+.badge.eco { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.badge.hidden-deal { background: var(--amber-dim); color: var(--amber); }
+
+.ai-predictor {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.35rem;
+}
+
+.effective-price {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--green);
+  margin-top: 0.25rem;
+}
+
+.eco-badge {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--green);
+  margin-bottom: 0.5rem;
+}
+
+.card-main {
+  flex: 1;
+  min-width: 200px;
+}
+
+.carrier,
+.name {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.route,
+.bundle-flight {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.bundle-hotel {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stops-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.card-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  min-width: 160px;
+}
+
+.book-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.book-links .book-btn {
+  font-size: 0.85rem;
+  padding: 0.45rem 0.9rem;
+}
+
+.book-btn-airline {
+  background: linear-gradient(135deg, var(--green), #047857) !important;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.3);
+}
+
+.badge.gds-source {
+  background: rgba(14, 165, 233, 0.15);
+  color: var(--accent);
+}
+
+.badge.risky-connection {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.risk-timeline,
+.connection-tip {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.fee-assistant-breakdown {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.book-link-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.ota-risk-tooltip {
+  color: #f59e0b;
+  font-size: 0.9rem;
+  cursor: help;
+}
+
+.price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--green);
+}
+
+.card-price .label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.book-btn {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--accent), #0284c7);
+  color: white !important;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+  border: none;
+  min-width: 120px;
+}
+
+.book-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.4);
+  text-decoration: none;
+}
+
+.sections-extra {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.section-block h3 {
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+  color: var(--text-muted);
+}
+
+.section-block .results-list {
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .card-photo {
+    width: 120px;
+    min-width: 120px;
+  }
+  .card-price {
+    min-width: 100%;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .result-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+  .card-photo {
+    width: 100%;
+    min-width: 100%;
+    height: 140px;
+  }
+  .card-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .card-price {
+    align-items: flex-start;
+    width: 100%;
+  }
+  .sections-extra {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,62 @@
+.offline-vault {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0;
+  margin-top: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.offline-vault .section-header {
+  padding: 1.5rem 1.5rem 0.75rem;
+  position: relative;
+}
+
+.offline-vault .section-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--amber), var(--accent));
+  opacity: 0.9;
+}
+
+.offline-vault h2 { font-size: 1.5rem; margin: 0 0 0.5rem 0; }
+.offline-vault .section-desc { color: var(--text-muted); font-size: 0.95rem; margin: 0 0 1rem 0; }
+
+.offline-vault .vault-content {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.offline-banner {
+  background: var(--amber-dim);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  color: var(--amber);
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+}
+.vault-meta { font-size: 0.9rem; color: var(--text-muted); margin: 0 0 0.5rem 0; }
+.restore-btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: linear-gradient(135deg, var(--accent), #0284c7);
+  color: white;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.3);
+  transition: transform 0.15s;
+}
+.restore-btn:hover { transform: translateY(-1px); }
+.what-if { border-top: 1px solid var(--border); padding-top: 1.25rem; }
+.what-if h3 { font-size: 1.1rem; margin: 0 0 0.75rem 0; }
+.what-if label { display: block; margin-bottom: 0.5rem; }
+.what-if input[type="number"] { margin-left: 0.5rem; padding: 0.35rem 0.5rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--bg-input); color: var(--text); width: 80px; }
+.what-if input[type="range"] { margin-left: 0.5rem; accent-color: var(--accent); }
+.what-if-list { list-style: none; padding: 0; margin: 0.5rem 0 0 0; }
+.what-if-list li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.empty-vault { color: var(--text-muted); }
