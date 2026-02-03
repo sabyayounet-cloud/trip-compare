@@ -1,0 +1,113 @@
+<!--
+  TripCompare - Sidebar Widget for WordPress
+
+  INSTRUCTIONS:
+  1. Deploy your frontend to Netlify first
+  2. Replace YOUR-SITE-URL with your actual Netlify URL
+  3. In WordPress, go to Appearance → Widgets
+  4. Add "Custom HTML" widget to sidebar
+  5. Paste this code
+-->
+
+<style>
+  .tripcompare-sidebar-widget {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+
+  .tripcompare-sidebar-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .tripcompare-sidebar-header h4 {
+    margin: 0 0 4px 0;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .tripcompare-sidebar-header p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.9;
+  }
+
+  .tripcompare-sidebar-content {
+    padding: 16px;
+    text-align: center;
+  }
+
+  .tripcompare-sidebar-link {
+    display: inline-block;
+    background: #3b82f6;
+    color: white !important;
+    padding: 12px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.3s;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .tripcompare-sidebar-link:hover {
+    background: #2563eb;
+    color: white !important;
+  }
+
+  .tripcompare-sidebar-features {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .tripcompare-sidebar-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    color: #4b5563;
+  }
+
+  .tripcompare-sidebar-features li {
+    padding: 4px 0;
+  }
+
+  .tripcompare-sidebar-features li:before {
+    content: "✓ ";
+    color: #10b981;
+    font-weight: bold;
+  }
+</style>
+
+<div class="tripcompare-sidebar-widget">
+  <!-- Header -->
+  <div class="tripcompare-sidebar-header">
+    <h4>✈️ Travel Deals</h4>
+    <p>Find the best prices</p>
+  </div>
+
+  <!-- Content -->
+  <div class="tripcompare-sidebar-content">
+    <a href="https://YOUR-SITE-URL.netlify.app"
+       target="_blank"
+       class="tripcompare-sidebar-link"
+       rel="noopener noreferrer">
+      Search Flights & Hotels
+    </a>
+
+    <div class="tripcompare-sidebar-features">
+      <ul>
+        <li>Compare 100+ Airlines</li>
+        <li>Best Hotel Prices</li>
+        <li>Tours & Activities</li>
+        <li>Free Cancellation</li>
+      </ul>
+    </div>
+  </div>
+</div>

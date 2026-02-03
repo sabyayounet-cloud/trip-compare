@@ -1,0 +1,90 @@
+<!--
+  TripCompare - Widget WordPress Embed
+
+  INSTRUCTIONS:
+  1. Deploy your frontend to Netlify first
+  2. Replace YOUR-SITE-URL with your actual Netlify URL
+  3. In WordPress, add "Custom HTML" block to any post/page
+  4. Paste this code
+  5. Adjust height (600px) if needed
+-->
+
+<style>
+  .tripcompare-widget {
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0;
+  }
+
+  .tripcompare-widget-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px 12px 0 0;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .tripcompare-widget-header h3 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .tripcompare-widget-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+  }
+
+  .tripcompare-widget-container {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 0 0 12px 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .tripcompare-widget-frame {
+    width: 100%;
+    height: 600px;
+    border: none;
+    display: block;
+    background: #f9fafb;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .tripcompare-widget {
+      margin: 20px 10px;
+    }
+    .tripcompare-widget-frame {
+      height: 500px;
+    }
+  }
+</style>
+
+<div class="tripcompare-widget">
+  <!-- Header -->
+  <div class="tripcompare-widget-header">
+    <h3>✈️ Find the Best Travel Deals</h3>
+    <p>Compare flights, hotels, and experiences across Europe</p>
+  </div>
+
+  <!-- Widget Container -->
+  <div class="tripcompare-widget-container">
+    <iframe
+      class="tripcompare-widget-frame"
+      src="https://YOUR-SITE-URL.netlify.app"
+      title="TripCompare Search Widget"
+      allow="fullscreen"
+      loading="lazy">
+    </iframe>
+  </div>
+</div>
+
+<!-- Optional: Powered by footer -->
+<div style="text-align: center; margin-top: 16px; color: #6b7280; font-size: 13px; font-family: sans-serif;">
+  Powered by <strong>TripCompare</strong> | Best Travel Deals
+</div>

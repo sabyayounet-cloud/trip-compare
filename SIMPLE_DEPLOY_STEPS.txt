@@ -1,0 +1,107 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║                                                                      ║
+║     🚀 DEPLOY TRIPCOMPARE IN 4 SIMPLE STEPS - COMPLETELY FREE! 🚀   ║
+║                                                                      ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+TOTAL TIME: 10 minutes
+TOTAL COST: $0
+YOUR APP WILL BE LIVE AT: https://your-site.netlify.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: GITHUB (3 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://github.com/new
+2. Name: trip-compare
+3. Public ✓
+4. Create repository
+5. Run these commands:
+
+   cd /Users/swagatikamishra/trip-compare
+   git remote add origin https://github.com/YOUR_USERNAME/trip-compare.git
+   git push -u origin main
+
+✅ CODE ON GITHUB
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: RENDER.COM - BACKEND (3 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://dashboard.render.com
+2. Sign up with GitHub
+3. New + → Web Service → Connect trip-compare
+4. Settings:
+   Build: pip install -r requirements.txt
+   Start: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+5. Add environment variables:
+   TRAVELPAYOUTS_TOKEN=fa478c260b19fb84ecba1b41be11cde1
+   TRAVELPAYOUTS_MARKER=tripcompare
+   CORS_ORIGINS=["*"]
+   DEBUG=False
+6. Create Web Service
+7. Wait 3 min → COPY YOUR URL
+
+✅ BACKEND LIVE at: https://tripcompare-api-xxxx.onrender.com
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: NETLIFY - FRONTEND (3 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://app.netlify.com
+2. Sign up with GitHub
+3. Add new site → Import from GitHub → trip-compare
+4. Settings:
+   Base: frontend
+   Build: npm run build
+   Publish: frontend/dist
+5. Environment variable:
+   VITE_API_URL=https://tripcompare-api-xxxx.onrender.com
+   (use YOUR Render URL!)
+6. Deploy site
+7. Wait 2 min → COPY YOUR URL
+
+✅ FRONTEND LIVE at: https://your-site.netlify.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4: CONNECT THEM (1 MIN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go back to Render dashboard
+2. Click tripcompare-api → Environment
+3. Edit CORS_ORIGINS:
+   ["https://your-site.netlify.app"]
+   (use YOUR Netlify URL!)
+4. Save → Wait 1 min
+
+✅ CONNECTED & WORKING!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 YOU'RE LIVE! 🎉
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your live URLs:
+• Frontend: https://your-site.netlify.app
+• Backend: https://tripcompare-api-xxxx.onrender.com
+• API Docs: https://tripcompare-api-xxxx.onrender.com/docs
+
+Test it:
+1. Open your Netlify URL
+2. Search: LON → BCN
+3. Click a deal → Affiliate link works!
+
+Track earnings:
+https://www.travelpayouts.com/programs
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NEED HELP? Open: DEPLOY_WITH_ME.md for detailed screenshots
+
+START NOW! It only takes 10 minutes! 🚀
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
