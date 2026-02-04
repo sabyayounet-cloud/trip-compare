@@ -206,23 +206,14 @@ function HeroSection({ onSearch, loading }) {
             });
           }, 100);
         } else {
-          // If no API results, generate direct booking link
-          const result = await searchApi.flights({
-            origin: formData.origin,
-            destination: formData.destination,
-            departure_date: formData.departureDate,
-            return_date: formData.returnDate || null,
-            travelers: totalTravelers,
-            adults: formData.adults,
-            children: formData.children,
-            child_ages: formData.childAges,
-            cabin_class: 'economy',
-            language: formData.language,
-            currency: formData.currency,
-          });
-          if (result.search_url) {
-            window.open(result.search_url, '_blank');
-          }
+          // If no API results, show empty state with booking link
+          setFlightPrices({ noResults: true });
+          setTimeout(() => {
+            document.getElementById('search-results')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100);
         }
       } else if (activeTab === 'hotels') {
         // Convert airport code to city name for hotel search
@@ -250,22 +241,14 @@ function HeroSection({ onSearch, loading }) {
             throw new Error('No hotels found');
           }
         } catch (hotelError) {
-          // If price API fails, generate direct booking link
-          const result = await searchApi.hotels({
-            destination: cityName,
-            check_in: formData.checkIn,
-            check_out: formData.checkOut,
-            guests: totalTravelers,
-            adults: formData.adults,
-            children: formData.children,
-            child_ages: formData.childAges,
-            rooms: formData.rooms,
-            language: formData.language,
-            currency: formData.currency,
-          });
-          if (result.search_url) {
-            window.open(result.search_url, '_blank');
-          }
+          // If price API fails, show empty state with booking link
+          setHotelPrices({ noResults: true });
+          setTimeout(() => {
+            document.getElementById('search-results')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100);
         }
       }
     } catch (error) {
@@ -614,61 +597,69 @@ function HeroSection({ onSearch, loading }) {
                   ✈️ Flight Results: {formData.origin} → {formData.destination}
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  {formData.departureDate} {formData.returnDate && `- ${formData.returnDate}`} • {formData.travelers} traveler{formData.travelers > 1 ? 's' : ''}
+                  {formData.departureDate} {formData.returnDate && `- ${formData.returnDate}`} • {formData.adults + formData.children} traveler{(formData.adults + formData.children) > 1 ? 's' : ''}
+                  {formData.children > 0 && ` (${formData.adults} adult${formData.adults > 1 ? 's' : ''}, ${formData.children} child${formData.children > 1 ? 'ren' : ''})`}
                 </p>
-                <div className="grid gap-4">
-                  {Object.entries(flightPrices).slice(0, 10).map(([dest, flights]) =>
-                    Object.entries(flights).slice(0, 5).map(([key, flight]) => (
-                      <div key={`${dest}-${key}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                        <div className="flex justify-between items-start">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-2">
-                              <span className="text-lg font-semibold text-gray-800">
-                                {formData.origin} → {dest}
-                              </span>
-                              {flight.transfers === 0 && (
-                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
-                                  Direct
+
+                {flightPrices.noResults ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <div className="text-6xl mb-4">✈️</div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Searching for the best flights...</h3>
+                    <p className="text-gray-600 mb-6">We're finding great deals for your trip!</p>
+                    <a
+                      href={`https://www.aviasales.com/search/${formData.origin}${formData.destination}${formData.departureDate.replace(/-/g, '')}${formData.returnDate ? formData.returnDate.replace(/-/g, '') : ''}${formData.adults + formData.children}?marker=tripcompare&locale=${formData.language}&currency=${formData.currency}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary inline-block"
+                    >
+                      View Available Flights →
+                    </a>
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {Object.entries(flightPrices).slice(0, 10).map(([dest, flights]) =>
+                      Object.entries(flights).slice(0, 5).map(([key, flight]) => (
+                        <div key={`${dest}-${key}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-2">
+                                <span className="text-lg font-semibold text-gray-800">
+                                  {formData.origin} → {dest}
                                 </span>
-                              )}
+                                {flight.transfers === 0 && (
+                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                    Direct
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-sm text-gray-600 space-y-1">
+                                <p>📅 Depart: {new Date(flight.departure_at).toLocaleDateString()}</p>
+                                {flight.return_at && (
+                                  <p>📅 Return: {new Date(flight.return_at).toLocaleDateString()}</p>
+                                )}
+                                {flight.airline && <p>✈️ Airline: {flight.airline}</p>}
+                                {flight.transfers > 0 && <p>🔄 {flight.transfers} stop{flight.transfers > 1 ? 's' : ''}</p>}
+                              </div>
                             </div>
-                            <div className="text-sm text-gray-600 space-y-1">
-                              <p>📅 Depart: {new Date(flight.departure_at).toLocaleDateString()}</p>
-                              {flight.return_at && (
-                                <p>📅 Return: {new Date(flight.return_at).toLocaleDateString()}</p>
-                              )}
-                              {flight.airline && <p>✈️ Airline: {flight.airline}</p>}
-                              {flight.transfers > 0 && <p>🔄 {flight.transfers} stop{flight.transfers > 1 ? 's' : ''}</p>}
+                            <div className="text-right ml-4">
+                              <div className="text-2xl font-bold text-blue-600 mb-2">
+                                {formData.currency === 'EUR' ? '€' : formData.currency === 'GBP' ? '£' : '$'}{flight.price || flight.value}
+                              </div>
+                              <a
+                                href={flight.booking_link || `https://www.aviasales.com/search/${formData.origin}${formData.destination}?marker=tripcompare&locale=${formData.language}&currency=${formData.currency}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn btn-primary text-sm"
+                              >
+                                Book Now →
+                              </a>
                             </div>
-                          </div>
-                          <div className="text-right ml-4">
-                            <div className="text-2xl font-bold text-blue-600 mb-2">
-                              €{flight.price || flight.value}
-                            </div>
-                            <a
-                              href={flight.booking_link || `https://www.aviasales.com/search/${formData.origin}${formData.destination}?marker=tripcompare`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="btn btn-primary text-sm"
-                            >
-                              Book Now →
-                            </a>
                           </div>
                         </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-                <div className="mt-6 text-center">
-                  <a
-                    href={`https://www.aviasales.com/search/${formData.origin}${formData.destination}?marker=tripcompare`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
-                  >
-                    View all flights on Aviasales →
-                  </a>
-                </div>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
@@ -679,52 +670,60 @@ function HeroSection({ onSearch, loading }) {
                   🏨 Hotel Results: {getCityNameFromCode(formData.destination)}
                 </h2>
                 <p className="text-gray-600 mb-6">
-                  {formData.checkIn} - {formData.checkOut} • {formData.guests} guest{formData.guests > 1 ? 's' : ''}
+                  {formData.checkIn} - {formData.checkOut} • {formData.adults + formData.children} guest{(formData.adults + formData.children) > 1 ? 's' : ''}
+                  {formData.children > 0 && ` (${formData.adults} adult${formData.adults > 1 ? 's' : ''}, ${formData.children} child${formData.children > 1 ? 'ren' : ''})`}
                 </p>
-                <div className="grid gap-4">
-                  {hotelPrices.slice(0, 10).map((hotel, index) => (
-                    <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                      <div className="flex justify-between items-start">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                            {hotel.name || hotel.hotelName || `Hotel ${index + 1}`}
-                          </h3>
-                          <div className="text-sm text-gray-600 space-y-1">
-                            {hotel.stars && (
-                              <p>⭐ {hotel.stars} star{hotel.stars > 1 ? 's' : ''}</p>
-                            )}
-                            {hotel.location && <p>📍 {hotel.location}</p>}
-                            {hotel.distance && <p>🚶 {hotel.distance} from center</p>}
+
+                {hotelPrices.noResults ? (
+                  <div className="text-center py-12 bg-gray-50 rounded-lg">
+                    <div className="text-6xl mb-4">🏨</div>
+                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Searching for the best hotels...</h3>
+                    <p className="text-gray-600 mb-6">We're finding perfect accommodations for your stay!</p>
+                    <a
+                      href={`https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&checkIn=${formData.checkIn}&checkOut=${formData.checkOut}&adults=${formData.adults}&children=${formData.children}&marker=tripcompare&locale=${formData.language}&currency=${formData.currency}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-primary inline-block"
+                    >
+                      View Available Hotels →
+                    </a>
+                  </div>
+                ) : (
+                  <div className="grid gap-4">
+                    {hotelPrices.slice(0, 10).map((hotel, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                              {hotel.name || hotel.hotelName || `Hotel ${index + 1}`}
+                            </h3>
+                            <div className="text-sm text-gray-600 space-y-1">
+                              {hotel.stars && (
+                                <p>⭐ {hotel.stars} star{hotel.stars > 1 ? 's' : ''}</p>
+                              )}
+                              {hotel.location && <p>📍 {hotel.location}</p>}
+                              {hotel.distance && <p>🚶 {hotel.distance} from center</p>}
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-right ml-4">
-                          <div className="text-2xl font-bold text-blue-600 mb-2">
-                            €{hotel.price || hotel.priceFrom || 'N/A'}
+                          <div className="text-right ml-4">
+                            <div className="text-2xl font-bold text-blue-600 mb-2">
+                              {formData.currency === 'EUR' ? '€' : formData.currency === 'GBP' ? '£' : '$'}{hotel.price || hotel.priceFrom || 'N/A'}
+                            </div>
+                            <p className="text-xs text-gray-500 mb-2">per night</p>
+                            <a
+                              href={hotel.booking_link || `https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&marker=tripcompare&locale=${formData.language}&currency=${formData.currency}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-primary text-sm"
+                            >
+                              Book Now →
+                            </a>
                           </div>
-                          <p className="text-xs text-gray-500 mb-2">per night</p>
-                          <a
-                            href={hotel.booking_link || `https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&marker=tripcompare`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="btn btn-primary text-sm"
-                          >
-                            Book Now →
-                          </a>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 text-center">
-                  <a
-                    href={`https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&marker=tripcompare`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-600 hover:text-blue-700 font-semibold"
-                  >
-                    View all hotels on Hotellook →
-                  </a>
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
