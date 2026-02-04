@@ -5,7 +5,7 @@
  * All API calls go through this module for consistency and error handling.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://trip-compare.onrender.com';
 
 class ApiClient {
   constructor(baseUrl) {
