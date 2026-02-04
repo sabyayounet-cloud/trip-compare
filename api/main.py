@@ -241,7 +241,7 @@ def seed_database():
     amsterdam = db.query(models.Destination).filter(models.Destination.name == "Amsterdam").first()
     paris = db.query(models.Destination).filter(models.Destination.name == "Paris").first()
 
-    # Sample deals
+    # Sample deals with affiliate links
     deals = [
         models.Deal(
             title="Barcelona Beach Escape",
@@ -253,7 +253,8 @@ def seed_database():
             deal_price=79,
             discount_percentage=45,
             currency="EUR",
-            affiliate_provider="skyscanner",
+            affiliate_provider="aviasales",
+            affiliate_link="https://www.aviasales.com/search/LON0415BCN04221?marker=tripcompare",
             image_url="https://images.unsplash.com/photo-1523531294919-4bcd7c65e216?w=600",
             travel_dates="Apr 15-22",
             is_featured=True
@@ -268,7 +269,8 @@ def seed_database():
             deal_price=199,
             discount_percentage=38,
             currency="EUR",
-            affiliate_provider="booking",
+            affiliate_provider="aviasales",
+            affiliate_link="https://www.aviasales.com/search/PAR0501ROM05041?marker=tripcompare",
             image_url="https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600",
             travel_dates="May 1-4",
             is_featured=True
@@ -282,7 +284,8 @@ def seed_database():
             deal_price=89,
             discount_percentage=52,
             currency="EUR",
-            affiliate_provider="booking",
+            affiliate_provider="hotellook",
+            affiliate_link="https://search.hotellook.com?destination=Amsterdam&checkIn=2026-05-15&checkOut=2026-05-18&adults=2&marker=tripcompare",
             image_url="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=600",
             is_featured=True
         ),
@@ -296,7 +299,8 @@ def seed_database():
             deal_price=129,
             discount_percentage=40,
             currency="EUR",
-            affiliate_provider="skyscanner",
+            affiliate_provider="aviasales",
+            affiliate_link="https://www.aviasales.com/search/BER0607PAR06091?marker=tripcompare",
             image_url="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600",
             travel_dates="Jun 7-9",
             is_featured=True
