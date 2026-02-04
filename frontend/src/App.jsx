@@ -182,7 +182,7 @@ function HeroSection({ onSearch, loading }) {
 
     try {
       if (activeTab === 'flights') {
-        // First fetch real prices from Travelpayouts
+        // Fetch real prices from Travelpayouts to show on page
         const prices = await searchApi.getFlightPrices(
           formData.origin,
           formData.destination,
@@ -192,41 +192,69 @@ function HeroSection({ onSearch, loading }) {
 
         if (prices.success && prices.data) {
           setFlightPrices(prices.data);
-        }
-
-        // Then generate the booking link
-        const result = await searchApi.flights({
-          origin: formData.origin,
-          destination: formData.destination,
-          departure_date: formData.departureDate,
-          return_date: formData.returnDate || null,
-          travelers: formData.travelers,
-          cabin_class: 'economy',
-        });
-        if (result.search_url) {
-          window.open(result.search_url, '_blank');
+          // Scroll to results
+          setTimeout(() => {
+            document.getElementById('search-results')?.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }, 100);
+        } else {
+          // If no API results, generate direct booking link
+          const result = await searchApi.flights({
+            origin: formData.origin,
+            destination: formData.destination,
+            departure_date: formData.departureDate,
+            return_date: formData.returnDate || null,
+            travelers: formData.travelers,
+            cabin_class: 'economy',
+          });
+          if (result.search_url) {
+            window.open(result.search_url, '_blank');
+          }
         }
       } else if (activeTab === 'hotels') {
         // Convert airport code to city name for hotel search
         const cityName = getCityNameFromCode(formData.destination);
 
-        // Skip price fetching (causes 502 errors), just generate booking link
-        // Note: Hotellook API has restrictions, direct booking link works better
+        // Try to fetch hotel prices
+        try {
+          const prices = await searchApi.getHotelPrices(
+            cityName,
+            formData.checkIn,
+            formData.checkOut,
+            formData.guests
+          );
 
-        // Generate booking link
-        const result = await searchApi.hotels({
-          destination: cityName, // Use city name, not airport code
-          check_in: formData.checkIn,
-          check_out: formData.checkOut,
-          guests: formData.guests,
-          rooms: formData.rooms,
-        });
-        if (result.search_url) {
-          window.open(result.search_url, '_blank');
+          if (prices.success && prices.hotels && prices.hotels.length > 0) {
+            setHotelPrices(prices.hotels);
+            // Scroll to results
+            setTimeout(() => {
+              document.getElementById('search-results')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }, 100);
+          } else {
+            throw new Error('No hotels found');
+          }
+        } catch (hotelError) {
+          // If price API fails, generate direct booking link
+          const result = await searchApi.hotels({
+            destination: cityName,
+            check_in: formData.checkIn,
+            check_out: formData.checkOut,
+            guests: formData.guests,
+            rooms: formData.rooms,
+          });
+          if (result.search_url) {
+            window.open(result.search_url, '_blank');
+          }
         }
       }
     } catch (error) {
       console.error('Search error:', error);
+      alert('Search failed. Please try again or adjust your search criteria.');
     } finally {
       setSearchLoading(false);
     }
@@ -399,6 +427,132 @@ function HeroSection({ onSearch, loading }) {
             </div>
           ))}
         </div>
+
+        {/* Search Results Section */}
+        {(flightPrices || hotelPrices) && (
+          <div id="search-results" className="mt-12 bg-white rounded-2xl p-6 shadow-2xl max-w-4xl mx-auto">
+            {/* Flight Results */}
+            {flightPrices && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  ✈️ Flight Results: {formData.origin} → {formData.destination}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {formData.departureDate} {formData.returnDate && `- ${formData.returnDate}`} • {formData.travelers} traveler{formData.travelers > 1 ? 's' : ''}
+                </p>
+                <div className="grid gap-4">
+                  {Object.entries(flightPrices).slice(0, 10).map(([dest, flights]) =>
+                    Object.entries(flights).slice(0, 5).map(([key, flight]) => (
+                      <div key={`${dest}-${key}`} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="text-lg font-semibold text-gray-800">
+                                {formData.origin} → {dest}
+                              </span>
+                              {flight.transfers === 0 && (
+                                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                                  Direct
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-sm text-gray-600 space-y-1">
+                              <p>📅 Depart: {new Date(flight.departure_at).toLocaleDateString()}</p>
+                              {flight.return_at && (
+                                <p>📅 Return: {new Date(flight.return_at).toLocaleDateString()}</p>
+                              )}
+                              {flight.airline && <p>✈️ Airline: {flight.airline}</p>}
+                              {flight.transfers > 0 && <p>🔄 {flight.transfers} stop{flight.transfers > 1 ? 's' : ''}</p>}
+                            </div>
+                          </div>
+                          <div className="text-right ml-4">
+                            <div className="text-2xl font-bold text-blue-600 mb-2">
+                              €{flight.price || flight.value}
+                            </div>
+                            <a
+                              href={flight.booking_link || `https://www.aviasales.com/search/${formData.origin}${formData.destination}?marker=tripcompare`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="btn btn-primary text-sm"
+                            >
+                              Book Now →
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="mt-6 text-center">
+                  <a
+                    href={`https://www.aviasales.com/search/${formData.origin}${formData.destination}?marker=tripcompare`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                  >
+                    View all flights on Aviasales →
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Hotel Results */}
+            {hotelPrices && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                  🏨 Hotel Results: {getCityNameFromCode(formData.destination)}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {formData.checkIn} - {formData.checkOut} • {formData.guests} guest{formData.guests > 1 ? 's' : ''}
+                </p>
+                <div className="grid gap-4">
+                  {hotelPrices.slice(0, 10).map((hotel, index) => (
+                    <div key={index} className="border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                            {hotel.name || hotel.hotelName || `Hotel ${index + 1}`}
+                          </h3>
+                          <div className="text-sm text-gray-600 space-y-1">
+                            {hotel.stars && (
+                              <p>⭐ {hotel.stars} star{hotel.stars > 1 ? 's' : ''}</p>
+                            )}
+                            {hotel.location && <p>📍 {hotel.location}</p>}
+                            {hotel.distance && <p>🚶 {hotel.distance} from center</p>}
+                          </div>
+                        </div>
+                        <div className="text-right ml-4">
+                          <div className="text-2xl font-bold text-blue-600 mb-2">
+                            €{hotel.price || hotel.priceFrom || 'N/A'}
+                          </div>
+                          <p className="text-xs text-gray-500 mb-2">per night</p>
+                          <a
+                            href={hotel.booking_link || `https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&marker=tripcompare`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn btn-primary text-sm"
+                          >
+                            Book Now →
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 text-center">
+                  <a
+                    href={`https://search.hotellook.com?destination=${getCityNameFromCode(formData.destination)}&marker=tripcompare`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                  >
+                    View all hotels on Hotellook →
+                  </a>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </section>
   );
