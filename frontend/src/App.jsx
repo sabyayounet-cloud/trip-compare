@@ -88,8 +88,9 @@ function CityAutocomplete({ value, onChange, placeholder, label }) {
   }, [value]);
 
   const handleInputChange = (e) => {
-    const newValue = e.target.value;
+    const newValue = e.target.value.toUpperCase();
     setInputValue(newValue);
+    onChange(newValue); // Always update parent form state
 
     if (newValue.length >= 2) {
       // Filter popular cities based on input
@@ -123,6 +124,11 @@ function CityAutocomplete({ value, onChange, placeholder, label }) {
         onChange={handleInputChange}
         onFocus={() => inputValue.length >= 2 && setShowSuggestions(true)}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        required
+        minLength={3}
+        maxLength={3}
+        pattern="[A-Z]{3}"
+        title="Enter a 3-letter airport code (e.g., LON, BCN)"
       />
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute top-full mt-1 w-full bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-64 overflow-y-auto">
