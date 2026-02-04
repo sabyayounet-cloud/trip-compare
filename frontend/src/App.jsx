@@ -13,7 +13,7 @@ import {
   analyticsApi,
   checkHealth,
   seedDatabase
-} from './api';
+} from './api/index.js';
 import './index.css';
 
 // Icons (using emoji for simplicity - in production use lucide-react)
