@@ -198,7 +198,11 @@ function HeroSection({ onSearch, loading }) {
             formData.currency
           );
 
-          if (prices.success && prices.data) {
+          console.log('Flight API response:', prices);
+
+          // Check if we have actual flight data
+          if (prices.success && prices.data && Object.keys(prices.data).length > 0) {
+            console.log('Setting flight prices:', prices.data);
             setFlightPrices(prices.data);
             // Scroll to results
             setTimeout(() => {
@@ -209,6 +213,7 @@ function HeroSection({ onSearch, loading }) {
             }, 100);
           } else {
             // If no API results, show empty state with booking link
+            console.log('No flight data, showing empty state');
             setFlightPrices({ noResults: true });
             setTimeout(() => {
               document.getElementById('search-results')?.scrollIntoView({
