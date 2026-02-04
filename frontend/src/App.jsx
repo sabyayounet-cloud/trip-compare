@@ -53,6 +53,95 @@ function Navbar({ onSubscribeClick }) {
   );
 }
 
+// City Autocomplete Component
+function CityAutocomplete({ value, onChange, placeholder, label }) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [inputValue, setInputValue] = useState(value);
+
+  // Popular cities with IATA codes
+  const popularCities = [
+    { code: 'LON', name: 'London', country: 'United Kingdom' },
+    { code: 'PAR', name: 'Paris', country: 'France' },
+    { code: 'BCN', name: 'Barcelona', country: 'Spain' },
+    { code: 'ROM', name: 'Rome', country: 'Italy' },
+    { code: 'AMS', name: 'Amsterdam', country: 'Netherlands' },
+    { code: 'BER', name: 'Berlin', country: 'Germany' },
+    { code: 'MAD', name: 'Madrid', country: 'Spain' },
+    { code: 'VIE', name: 'Vienna', country: 'Austria' },
+    { code: 'PRG', name: 'Prague', country: 'Czech Republic' },
+    { code: 'LIS', name: 'Lisbon', country: 'Portugal' },
+    { code: 'DUB', name: 'Dublin', country: 'Ireland' },
+    { code: 'ATH', name: 'Athens', country: 'Greece' },
+    { code: 'IST', name: 'Istanbul', country: 'Turkey' },
+    { code: 'NYC', name: 'New York', country: 'United States' },
+    { code: 'LAX', name: 'Los Angeles', country: 'United States' },
+    { code: 'MIA', name: 'Miami', country: 'United States' },
+    { code: 'DXB', name: 'Dubai', country: 'UAE' },
+    { code: 'SIN', name: 'Singapore', country: 'Singapore' },
+    { code: 'BKK', name: 'Bangkok', country: 'Thailand' },
+    { code: 'TYO', name: 'Tokyo', country: 'Japan' },
+  ];
+
+  useEffect(() => {
+    setInputValue(value);
+  }, [value]);
+
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+
+    if (newValue.length >= 2) {
+      // Filter popular cities based on input
+      const filtered = popularCities.filter(city =>
+        city.name.toLowerCase().includes(newValue.toLowerCase()) ||
+        city.code.toLowerCase().includes(newValue.toLowerCase()) ||
+        city.country.toLowerCase().includes(newValue.toLowerCase())
+      );
+      setSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSelectCity = (city) => {
+    setInputValue(city.code);
+    onChange(city.code);
+    setShowSuggestions(false);
+  };
+
+  return (
+    <div className="flex flex-col gap-1 relative">
+      <label className="text-sm font-semibold text-gray-500">{label}</label>
+      <input
+        type="text"
+        className="input"
+        placeholder={placeholder}
+        value={inputValue}
+        onChange={handleInputChange}
+        onFocus={() => inputValue.length >= 2 && setShowSuggestions(true)}
+        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+      />
+      {showSuggestions && suggestions.length > 0 && (
+        <div className="absolute top-full mt-1 w-full bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-64 overflow-y-auto">
+          {suggestions.map((city) => (
+            <div
+              key={city.code}
+              className="px-4 py-3 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+              onClick={() => handleSelectCity(city)}
+            >
+              <div className="font-semibold text-gray-800">{city.name}</div>
+              <div className="text-sm text-gray-500">{city.code} · {city.country}</div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // Hero Section with Search
 function HeroSection({ onSearch, loading }) {
   const [activeTab, setActiveTab] = useState('flights');
@@ -171,28 +260,18 @@ function HeroSection({ onSearch, loading }) {
           {activeTab === 'flights' && (
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm font-semibold text-gray-500">From</label>
-                  <input
-                    type="text"
-                    className="input"
-                    placeholder="City or Airport"
-                    value={formData.origin}
-                    onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
-                    required
-                  />
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-sm font-semibold text-gray-500">To</label>
-                  <input
-                    type="text"
-                    className="input"
-                    placeholder="City or Airport"
-                    value={formData.destination}
-                    onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                    required
-                  />
-                </div>
+                <CityAutocomplete
+                  label="From"
+                  placeholder="City or Airport"
+                  value={formData.origin}
+                  onChange={(code) => setFormData({ ...formData, origin: code })}
+                />
+                <CityAutocomplete
+                  label="To"
+                  placeholder="City or Airport"
+                  value={formData.destination}
+                  onChange={(code) => setFormData({ ...formData, destination: code })}
+                />
                 <div className="flex flex-col gap-1">
                   <label className="text-sm font-semibold text-gray-500">Departure</label>
                   <input
@@ -235,15 +314,12 @@ function HeroSection({ onSearch, loading }) {
           {activeTab === 'hotels' && (
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-                <div className="flex flex-col gap-1 md:col-span-2">
-                  <label className="text-sm font-semibold text-gray-500">Destination</label>
-                  <input
-                    type="text"
-                    className="input"
+                <div className="md:col-span-2">
+                  <CityAutocomplete
+                    label="Destination"
                     placeholder="City, Hotel, or Region"
                     value={formData.destination}
-                    onChange={(e) => setFormData({ ...formData, destination: e.target.value })}
-                    required
+                    onChange={(code) => setFormData({ ...formData, destination: code })}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -670,7 +746,7 @@ export default function App() {
 
         // Load all data in parallel
         const [dealsData, destinationsData, experiencesData] = await Promise.all([
-          dealApi.getFeatured(6).catch(() => []),
+          dealApi.getAll(20).catch(() => []), // Load ALL deals (up to 20)
           destinationApi.getFeatured(4).catch(() => []),
           experienceApi.getTopRated(4).catch(() => []),
         ]);
