@@ -167,11 +167,14 @@ function HeroSection({ onSearch, loading }) {
     destination: '',
     departureDate: '',
     returnDate: '',
-    travelers: 1,
-    guests: 1,
+    adults: 1,
+    children: 0,
+    childAges: [],
     rooms: 1,
     checkIn: '',
     checkOut: '',
+    language: 'en',
+    currency: 'EUR',
   });
 
   const handleSubmit = async (e) => {
@@ -179,6 +182,9 @@ function HeroSection({ onSearch, loading }) {
     setSearchLoading(true);
     setFlightPrices(null);
     setHotelPrices(null);
+
+    // Calculate total travelers/guests (adults + children)
+    const totalTravelers = formData.adults + formData.children;
 
     try {
       if (activeTab === 'flights') {
@@ -206,8 +212,13 @@ function HeroSection({ onSearch, loading }) {
             destination: formData.destination,
             departure_date: formData.departureDate,
             return_date: formData.returnDate || null,
-            travelers: formData.travelers,
+            travelers: totalTravelers,
+            adults: formData.adults,
+            children: formData.children,
+            child_ages: formData.childAges,
             cabin_class: 'economy',
+            language: formData.language,
+            currency: formData.currency,
           });
           if (result.search_url) {
             window.open(result.search_url, '_blank');
@@ -223,7 +234,7 @@ function HeroSection({ onSearch, loading }) {
             cityName,
             formData.checkIn,
             formData.checkOut,
-            formData.guests
+            totalTravelers
           );
 
           if (prices.success && prices.hotels && prices.hotels.length > 0) {
@@ -244,8 +255,13 @@ function HeroSection({ onSearch, loading }) {
             destination: cityName,
             check_in: formData.checkIn,
             check_out: formData.checkOut,
-            guests: formData.guests,
+            guests: totalTravelers,
+            adults: formData.adults,
+            children: formData.children,
+            child_ages: formData.childAges,
             rooms: formData.rooms,
+            language: formData.language,
+            currency: formData.currency,
           });
           if (result.search_url) {
             window.open(result.search_url, '_blank');
@@ -328,11 +344,11 @@ function HeroSection({ onSearch, loading }) {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-sm font-semibold text-gray-500">Travelers</label>
+                  <label className="text-sm font-semibold text-gray-500">Adults</label>
                   <select
                     className="input"
-                    value={formData.travelers}
-                    onChange={(e) => setFormData({ ...formData, travelers: parseInt(e.target.value) })}
+                    value={formData.adults}
+                    onChange={(e) => setFormData({ ...formData, adults: parseInt(e.target.value) })}
                   >
                     {[1, 2, 3, 4, 5, 6].map((n) => (
                       <option key={n} value={n}>{n} Adult{n > 1 ? 's' : ''}</option>
@@ -340,6 +356,83 @@ function HeroSection({ onSearch, loading }) {
                   </select>
                 </div>
               </div>
+
+              {/* Children Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Children (0-17)</label>
+                  <select
+                    className="input"
+                    value={formData.children}
+                    onChange={(e) => {
+                      const numChildren = parseInt(e.target.value);
+                      setFormData({
+                        ...formData,
+                        children: numChildren,
+                        childAges: Array(numChildren).fill(5)
+                      });
+                    }}
+                  >
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <option key={n} value={n}>{n} {n === 0 ? 'Children' : n === 1 ? 'Child' : 'Children'}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {formData.children > 0 && (
+                  <div className="flex flex-col gap-1">
+                    <label className="text-sm font-semibold text-gray-500">Children Ages</label>
+                    <div className="flex gap-2">
+                      {Array.from({ length: formData.children }).map((_, index) => (
+                        <select
+                          key={index}
+                          className="input flex-1"
+                          value={formData.childAges[index] || 5}
+                          onChange={(e) => {
+                            const newAges = [...formData.childAges];
+                            newAges[index] = parseInt(e.target.value);
+                            setFormData({ ...formData, childAges: newAges });
+                          }}
+                        >
+                          {Array.from({ length: 18 }, (_, i) => i).map((age) => (
+                            <option key={age} value={age}>{age} yr</option>
+                          ))}
+                        </select>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Language and Currency Section */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Language</label>
+                  <select
+                    className="input"
+                    value={formData.language}
+                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                  >
+                    <option value="en">🇬🇧 English</option>
+                    <option value="nl">🇳🇱 Dutch</option>
+                    <option value="de">🇩🇪 German</option>
+                    <option value="fr">🇫🇷 French</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Currency</label>
+                  <select
+                    className="input"
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  >
+                    <option value="EUR">€ Euro (EUR)</option>
+                    <option value="USD">$ US Dollar (USD)</option>
+                    <option value="GBP">£ British Pound (GBP)</option>
+                  </select>
+                </div>
+              </div>
+
               <button type="submit" className="btn btn-primary w-full text-lg" disabled={loading}>
                 {loading ? <span className="spinner mx-auto"></span> : <><Icons.Search /> Search Flights</>}
               </button>
@@ -349,7 +442,7 @@ function HeroSection({ onSearch, loading }) {
           {/* Hotel Search Form */}
           {activeTab === 'hotels' && (
             <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="md:col-span-2">
                   <CityAutocomplete
                     label="Destination"
@@ -358,6 +451,9 @@ function HeroSection({ onSearch, loading }) {
                     onChange={(code) => setFormData({ ...formData, destination: code })}
                   />
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col gap-1">
                   <label className="text-sm font-semibold text-gray-500">Check-in</label>
                   <input
@@ -378,19 +474,99 @@ function HeroSection({ onSearch, loading }) {
                     required
                   />
                 </div>
+              </div>
+
+              {/* Adults and Children */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-sm font-semibold text-gray-500">Guests</label>
+                  <label className="text-sm font-semibold text-gray-500">Adults</label>
                   <select
                     className="input"
-                    value={formData.guests}
-                    onChange={(e) => setFormData({ ...formData, guests: parseInt(e.target.value) })}
+                    value={formData.adults}
+                    onChange={(e) => setFormData({ ...formData, adults: parseInt(e.target.value) })}
                   >
                     {[1, 2, 3, 4, 5, 6].map((n) => (
-                      <option key={n} value={n}>{n} Guest{n > 1 ? 's' : ''}</option>
+                      <option key={n} value={n}>{n} Adult{n > 1 ? 's' : ''}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Children (0-17)</label>
+                  <select
+                    className="input"
+                    value={formData.children}
+                    onChange={(e) => {
+                      const numChildren = parseInt(e.target.value);
+                      setFormData({
+                        ...formData,
+                        children: numChildren,
+                        childAges: Array(numChildren).fill(5)
+                      });
+                    }}
+                  >
+                    {[0, 1, 2, 3, 4].map((n) => (
+                      <option key={n} value={n}>{n} {n === 0 ? 'Children' : n === 1 ? 'Child' : 'Children'}</option>
                     ))}
                   </select>
                 </div>
               </div>
+
+              {/* Children Ages */}
+              {formData.children > 0 && (
+                <div className="grid grid-cols-1 gap-4 mb-4">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-sm font-semibold text-gray-500">Children Ages</label>
+                    <div className="flex gap-2">
+                      {Array.from({ length: formData.children }).map((_, index) => (
+                        <select
+                          key={index}
+                          className="input flex-1"
+                          value={formData.childAges[index] || 5}
+                          onChange={(e) => {
+                            const newAges = [...formData.childAges];
+                            newAges[index] = parseInt(e.target.value);
+                            setFormData({ ...formData, childAges: newAges });
+                          }}
+                        >
+                          {Array.from({ length: 18 }, (_, i) => i).map((age) => (
+                            <option key={age} value={age}>{age} yr</option>
+                          ))}
+                        </select>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Language and Currency */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Language</label>
+                  <select
+                    className="input"
+                    value={formData.language}
+                    onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                  >
+                    <option value="en">🇬🇧 English</option>
+                    <option value="nl">🇳🇱 Dutch</option>
+                    <option value="de">🇩🇪 German</option>
+                    <option value="fr">🇫🇷 French</option>
+                  </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-semibold text-gray-500">Currency</label>
+                  <select
+                    className="input"
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+                  >
+                    <option value="EUR">€ Euro (EUR)</option>
+                    <option value="USD">$ US Dollar (USD)</option>
+                    <option value="GBP">£ British Pound (GBP)</option>
+                  </select>
+                </div>
+              </div>
+
               <button type="submit" className="btn btn-primary w-full text-lg" disabled={loading}>
                 {loading ? <span className="spinner mx-auto"></span> : <><Icons.Search /> Search Hotels</>}
               </button>
