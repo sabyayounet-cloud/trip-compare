@@ -189,24 +189,37 @@ function HeroSection({ onSearch, loading }) {
     try {
       if (activeTab === 'flights') {
         // Fetch real prices from Travelpayouts to show on page
-        const prices = await searchApi.getFlightPrices(
-          formData.origin,
-          formData.destination,
-          formData.departureDate,
-          formData.returnDate || null
-        );
+        try {
+          const prices = await searchApi.getFlightPrices(
+            formData.origin,
+            formData.destination,
+            formData.departureDate,
+            formData.returnDate || null,
+            formData.currency
+          );
 
-        if (prices.success && prices.data) {
-          setFlightPrices(prices.data);
-          // Scroll to results
-          setTimeout(() => {
-            document.getElementById('search-results')?.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }, 100);
-        } else {
-          // If no API results, show empty state with booking link
+          if (prices.success && prices.data) {
+            setFlightPrices(prices.data);
+            // Scroll to results
+            setTimeout(() => {
+              document.getElementById('search-results')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }, 100);
+          } else {
+            // If no API results, show empty state with booking link
+            setFlightPrices({ noResults: true });
+            setTimeout(() => {
+              document.getElementById('search-results')?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }, 100);
+          }
+        } catch (flightError) {
+          console.error('Flight search error:', flightError);
+          // Show empty state with booking link on error
           setFlightPrices({ noResults: true });
           setTimeout(() => {
             document.getElementById('search-results')?.scrollIntoView({
@@ -225,7 +238,8 @@ function HeroSection({ onSearch, loading }) {
             cityName,
             formData.checkIn,
             formData.checkOut,
-            totalTravelers
+            totalTravelers,
+            formData.currency
           );
 
           if (prices.success && prices.hotels && prices.hotels.length > 0) {
@@ -253,7 +267,18 @@ function HeroSection({ onSearch, loading }) {
       }
     } catch (error) {
       console.error('Search error:', error);
-      alert('Search failed. Please try again or adjust your search criteria.');
+      // Show empty state for any unexpected errors
+      if (activeTab === 'flights') {
+        setFlightPrices({ noResults: true });
+      } else if (activeTab === 'hotels') {
+        setHotelPrices({ noResults: true });
+      }
+      setTimeout(() => {
+        document.getElementById('search-results')?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
     } finally {
       setSearchLoading(false);
     }
