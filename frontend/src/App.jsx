@@ -53,35 +53,43 @@ function Navbar({ onSubscribeClick }) {
   );
 }
 
+// Popular cities data - shared across components
+const POPULAR_CITIES = [
+  { code: 'LON', name: 'London', country: 'United Kingdom' },
+  { code: 'PAR', name: 'Paris', country: 'France' },
+  { code: 'BCN', name: 'Barcelona', country: 'Spain' },
+  { code: 'ROM', name: 'Rome', country: 'Italy' },
+  { code: 'AMS', name: 'Amsterdam', country: 'Netherlands' },
+  { code: 'BER', name: 'Berlin', country: 'Germany' },
+  { code: 'MAD', name: 'Madrid', country: 'Spain' },
+  { code: 'VIE', name: 'Vienna', country: 'Austria' },
+  { code: 'PRG', name: 'Prague', country: 'Czech Republic' },
+  { code: 'LIS', name: 'Lisbon', country: 'Portugal' },
+  { code: 'DUB', name: 'Dublin', country: 'Ireland' },
+  { code: 'ATH', name: 'Athens', country: 'Greece' },
+  { code: 'IST', name: 'Istanbul', country: 'Turkey' },
+  { code: 'NYC', name: 'New York', country: 'United States' },
+  { code: 'LAX', name: 'Los Angeles', country: 'United States' },
+  { code: 'MIA', name: 'Miami', country: 'United States' },
+  { code: 'DXB', name: 'Dubai', country: 'UAE' },
+  { code: 'SIN', name: 'Singapore', country: 'Singapore' },
+  { code: 'BKK', name: 'Bangkok', country: 'Thailand' },
+  { code: 'TYO', name: 'Tokyo', country: 'Japan' },
+];
+
+// Helper function to convert airport code to city name
+const getCityNameFromCode = (code) => {
+  const city = POPULAR_CITIES.find(c => c.code === code);
+  return city ? city.name : code;
+};
+
 // City Autocomplete Component
 function CityAutocomplete({ value, onChange, placeholder, label }) {
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [inputValue, setInputValue] = useState(value);
 
-  // Popular cities with IATA codes
-  const popularCities = [
-    { code: 'LON', name: 'London', country: 'United Kingdom' },
-    { code: 'PAR', name: 'Paris', country: 'France' },
-    { code: 'BCN', name: 'Barcelona', country: 'Spain' },
-    { code: 'ROM', name: 'Rome', country: 'Italy' },
-    { code: 'AMS', name: 'Amsterdam', country: 'Netherlands' },
-    { code: 'BER', name: 'Berlin', country: 'Germany' },
-    { code: 'MAD', name: 'Madrid', country: 'Spain' },
-    { code: 'VIE', name: 'Vienna', country: 'Austria' },
-    { code: 'PRG', name: 'Prague', country: 'Czech Republic' },
-    { code: 'LIS', name: 'Lisbon', country: 'Portugal' },
-    { code: 'DUB', name: 'Dublin', country: 'Ireland' },
-    { code: 'ATH', name: 'Athens', country: 'Greece' },
-    { code: 'IST', name: 'Istanbul', country: 'Turkey' },
-    { code: 'NYC', name: 'New York', country: 'United States' },
-    { code: 'LAX', name: 'Los Angeles', country: 'United States' },
-    { code: 'MIA', name: 'Miami', country: 'United States' },
-    { code: 'DXB', name: 'Dubai', country: 'UAE' },
-    { code: 'SIN', name: 'Singapore', country: 'Singapore' },
-    { code: 'BKK', name: 'Bangkok', country: 'Thailand' },
-    { code: 'TYO', name: 'Tokyo', country: 'Japan' },
-  ];
+  const popularCities = POPULAR_CITIES;
 
   useEffect(() => {
     setInputValue(value);
@@ -199,21 +207,15 @@ function HeroSection({ onSearch, loading }) {
           window.open(result.search_url, '_blank');
         }
       } else if (activeTab === 'hotels') {
-        // Fetch real hotel prices
-        const prices = await searchApi.getHotelPrices(
-          formData.destination,
-          formData.checkIn,
-          formData.checkOut,
-          formData.guests
-        );
+        // Convert airport code to city name for hotel search
+        const cityName = getCityNameFromCode(formData.destination);
 
-        if (prices.success && prices.hotels) {
-          setHotelPrices(prices.hotels);
-        }
+        // Skip price fetching (causes 502 errors), just generate booking link
+        // Note: Hotellook API has restrictions, direct booking link works better
 
         // Generate booking link
         const result = await searchApi.hotels({
-          destination: formData.destination,
+          destination: cityName, // Use city name, not airport code
           check_in: formData.checkIn,
           check_out: formData.checkOut,
           guests: formData.guests,
