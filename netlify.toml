@@ -5,6 +5,10 @@
   command = "npm run build"
   publish = "dist"
 
+# Environment variables for production build
+[build.environment]
+  VITE_API_URL = "https://trip-compare.onrender.com"
+
 # Redirects for SPA routing (if you add more pages later)
 [[redirects]]
   from = "/*"
